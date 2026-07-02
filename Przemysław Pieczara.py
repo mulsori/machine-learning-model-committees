@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""Zadanie - Duży Zbiór Danych"""
-
 import pandas as pd
 import numpy as np
 import joblib
 
-# ZMIANA: Zamiast load_wine importujemy make_classification
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
 from sklearn.compose import ColumnTransformer
@@ -23,7 +19,7 @@ from sklearn.metrics import accuracy_score, f1_score
 
 # 1. PRZYGOTOWANIE ŚRODOWISKA I DANYCH
 
-print("Generowanie dużego zbioru danych...")
+print("Generowanie dużego zbioru danych")
 # Generowanie 10 000 próbek, 20 cech, 3 klasy
 X_array, y_array = make_classification(
     n_samples=10000,      # Liczba wierszy (kilka tysięcy)
@@ -96,7 +92,7 @@ def eval_model(name, model):
         "f1": f1_score(y_test, pred, average="macro")
     }
 
-print("Rozpoczynanie GridSearch... (Może to potrwać dłuższą chwilę przy 10 000 wierszy!)")
+print("Rozpoczynanie GridSearch")
 for name in models:
     gs = GridSearchCV(
         models[name],
@@ -116,14 +112,13 @@ for name in models:
     print(f" Zoptymalizowano model: {name}")
 
 results_df = pd.DataFrame(results)
-print("\n=== WYNIKI OPTYMALIZACJI MODELI BAZOWYCH ===")
+print("\nWYNIKI OPTYMALIZACJI MODELI BAZOWYCH")
 display(results_df[["model", "acc", "f1", "best_params"]])
-print("============================================\n")
 
 
 # 4. KOMITETY
 
-print("Trenowanie komitetów...")
+print("Trenowanie komitetów")
 
 voting_estimators = [
     ("knn", best_models["kNN"]),
@@ -190,7 +185,7 @@ all_committees = {
 }
 
 committee_results = []
-print("=== WYNIKI KOMITETÓW ===")
+print("WYNIKI KOMITETÓW")
 for name, model in all_committees.items():
     metrics = eval_model(name, model)
     committee_results.append(metrics)
